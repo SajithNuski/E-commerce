@@ -59,10 +59,45 @@ const addProduct = async (req, res) => {
 };
 
 // function for list product
-const listProducts = async (req, res) => {};
+const listProducts = async (req, res) => {
+    try {
+        const products = await ProductModel.find({});
+        res.json({ success: true, products });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            message: "Error occurred while fetching products",
+        });
+    }
+};
+
 // function for remove product
-const removeProducts = async (req, res) => {};
+const removeProducts = async (req, res) => {
+    try {   
+        await ProductModel.findByIdAndDelete(req.body.id );
+        res.json({ success: true, message: "Product removed successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            message: "Error occurred while removing product",
+        });
+    }
+};
 // function for single product
-const singleProduct = async (req, res) => {};
+const singleProduct = async (req, res) => {
+    try{
+        const {productId} = req.body;
+        const product = await ProductModel.findById(productId);
+        res.json ({ success: true, product });
+    }catch(error){
+        console.log(error);
+        res.json({
+            success: false,
+            message: "Error occurred while removing product",
+        });
+    }
+};
 
 export { addProduct, listProducts, removeProducts, singleProduct };
