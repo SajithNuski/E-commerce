@@ -16,15 +16,19 @@ connectCloudinary();
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    allowedHeaders: ["Content-Type", "Authorization", "token"],
+  }),
+);
 
 //API endpoints
-app.use("/api/user",userRouter);
+app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.get("/", (req, res) => {
   res.send("Welcome to the Zoro API!");
 });
-
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
