@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { useContext, useState } from "react";
 import ShopContext from "../context/ShopContext";
 // import { Products } from "../assets/assets";
 import { assets } from "../assets/assets";
@@ -12,6 +11,12 @@ const Product = () => {
   const productData = products.find((item) => item._id === productId);
   const [image, setImage] = useState(productData?.image?.[0] || "");
   const [size, setSize] = useState("");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    setImage(productData?.image?.[0] || "");
+    setSize("");
+  }, [productId, productData]);
 
   return productData ? (
     <div className="border-t border-gray-200 pt-10 transition-opacity duration-500 opacity-100">
@@ -67,7 +72,7 @@ const Product = () => {
               ))}
             </div>
           </div>
-          <button 
+          <button
             onClick={() => addToCart(productId, size)}
             className="bg-purple-800 text-sm text-white px-8 py-3 rounded-md active:bg-purple-500"
           >
@@ -103,6 +108,7 @@ const Product = () => {
       </div>
       {/* display related products */}
       <RelatedProducts
+        productId={productData._id}
         category={productData.category}
         subCategory={productData.subCategory}
       />

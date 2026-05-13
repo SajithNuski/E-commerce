@@ -1,15 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import ShopContext from "../context/ShopContext";
+import React from "react";
+import { products } from "../assets/assets";
 import Title from "./Title";
 import ProductItem from "./ProductItem";
 
 const LatestCollection = () => {
-  const { products } = useContext(ShopContext);
-  const [latestProducts, setLatestProducts] = useState([]);
-
-  useEffect(() => {
-    setLatestProducts(products.slice(0, 10)); // Assuming you want to display the first 10 products as the latest collection
-  }, [products]);
+  const latestProducts = products.slice(0, 10);
 
   return (
     <div className="my-10">

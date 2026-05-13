@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
-import ShopContext from "../context/ShopContext";
+import React from "react";
+import { products } from "../assets/assets";
 import Title from "./Title";
 import ProductItem from "./ProductItem";
 
 const BestSeller = () => {
-  const { products } = useContext(ShopContext);
   const bestSellers = products
     .filter((item) => item.bestseller)
     .slice(0, 5);

@@ -1,13 +1,59 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useState } from "react";
+import ShopContext from "../context/ShopContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const [currentState, setCurrentState] = useState("Sign Up");
+  const [currentState, setCurrentState] = useState("Login");
+  const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  }
+    try {
+      if (currentState === "Sign Up") {
+        const response = await axios.post(backendUrl + "/api/user/register", {
+          name,
+          email,
+          password,
+        });
+        if (response.data.success) {
+          setToken(response.data.token);
+          localStorage.setItem("token", response.data.token);
+        } else {
+          toast.error(response.data.message);
+        }
+      } else {
+        const response = await axios.post(backendUrl + "/api/user/login", {
+          email,
+          password,
+        });
+        console.log(response.data);
+        if (response.data.success) {
+          setToken(response.data.token);
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message || "An error occurred");
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center w-[90%] sm:max:w-96 m-auto mt-14 gap-4 text-gray-700  ">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col items-center w-[90%] sm:max:w-96 m-auto mt-14 gap-4 text-gray-700  "
+    >
       <div className="inline-flex items-center gap-2 mb-2 mt-10 ">
         <p className="font-family-prata-regular text-3xl ">{currentState}</p>
         <hr className="border-none h-[1.5px] w-8 bg-purple-700" />
@@ -16,6 +62,8 @@ const Login = () => {
         ""
       ) : (
         <input
+          onChange={(e) => setName(e.target.value)}
+          value={name}
           type="text"
           className="w-[40%] px-3 py-2 border border-gray-700"
           placeholder="Name"
@@ -24,20 +72,40 @@ const Login = () => {
       )}
 
       <input
+        onChange={(e) => setEmail(e.target.value)}
+        value={email}
         type="email"
         className="w-[40%] px-3 py-2 border border-gray-700"
         placeholder="Email"
         required
       />
       <input
+        onChange={(e) => setPassword(e.target.value)}
+        value={password}
         type="password"
         className="w-[40%] px-3 py-2 border border-gray-700"
         placeholder="Password"
         required
       />
-      <div className="w-[40%] flex justify-between text-sm mt-[-8px]">
+      <div className="w-[40%] flex justify-between text-sm -mt-2">
         <p>Forgot Password?</p>
-        {currentState === "Login" ? <p onClick={()=>setCurrentState("Sign Up")} className="cursor-pointer"> Create account</p> : <p onClick={()=>setCurrentState("Login")} className="cursor-pointer"> Login Here</p>}
+        {currentState === "Login" ? (
+          <p
+            onClick={() => setCurrentState("Sign Up")}
+            className="cursor-pointer"
+          >
+            {" "}
+            Create account
+          </p>
+        ) : (
+          <p
+            onClick={() => setCurrentState("Login")}
+            className="cursor-pointer"
+          >
+            {" "}
+            Login Here
+          </p>
+        )}
       </div>
       <button className="bg-purple-700 text-white px-3 py-2 w-[40%] mt-4">
         {currentState}
