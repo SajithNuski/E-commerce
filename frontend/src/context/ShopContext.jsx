@@ -1,5 +1,5 @@
 import { products as localProducts } from "../assets/assets";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -121,17 +121,15 @@ const ShopProvider = (props) => {
           console.error("Error occurred while calculating cart amount:", error);
         }
       }
-      return totalAmount;
     }
+    return totalAmount;
   };
 
   const getUserCart = async () => {
     try {
-      const response = await axios.get(
-        backendUrl + "/api/cart/get",
-        {},
-        { headers: { token: token } },
-      );
+      const response = await axios.get(backendUrl + "/api/cart/get", {
+        headers: { token: token },
+      });
       if (response.data.success) {
         setCartItems(response.data.cartData);
       }
@@ -140,6 +138,12 @@ const ShopProvider = (props) => {
       toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      getUserCart();
+    }
+  }, [token]);
 
   const value = {
     // Add your shop-related data and functions here
@@ -151,6 +155,7 @@ const ShopProvider = (props) => {
     showSearch,
     setShowSearch,
     cartItems,
+    setCartItems,
     addToCart,
     getCartCount,
     updateQuantity,
