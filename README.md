@@ -2,6 +2,11 @@
 
 Professional documentation for the Zoro full-stack e-commerce system.
 
+## Live Demo
+
+- Customer website: [https://zoro-fullstack-ecommerce-xgz2.vercel.app/](https://zoro-fullstack-ecommerce-xgz2.vercel.app/)
+- Admin panel: [https://zoro-fullstack-ecommerce-cndm.vercel.app/](https://zoro-fullstack-ecommerce-cndm.vercel.app/)
+
 ## Overview
 
 Zoro is a three-application commerce platform:
