@@ -1,4 +1,4 @@
-# Zoro Commerce Platform
+# Zoro E-Commerce Platform
 
 Professional documentation for the Zoro full-stack e-commerce system.
 
