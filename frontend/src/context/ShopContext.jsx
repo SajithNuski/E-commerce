@@ -12,7 +12,7 @@ const ShopProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const navigate = useNavigate();
   const [products] = useState(localProducts);
@@ -94,7 +94,7 @@ const ShopProvider = (props) => {
 
     if (token) {
       try {
-        await axios.post(
+        await axios.put(
           backendUrl + "/api/cart/update",
           { itemId, size, quantity: newQuantity },
           {

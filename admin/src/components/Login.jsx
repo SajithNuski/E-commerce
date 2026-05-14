@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { backendUrl } from "../App";
+import { backendUrl } from "../config/api";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -15,6 +15,7 @@ const Login = ({ setToken }) => {
       });
       if (responce.data.success) {
         setToken(responce.data.token);
+        localStorage.setItem("admin_token", responce.data.token);
       } else {
         toast.error(responce.data.message);
       }

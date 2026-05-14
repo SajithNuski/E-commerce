@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { assets } from "../assets/assets";
 
 const Footer = () => {
@@ -20,9 +21,21 @@ const Footer = () => {
             Quick Links
           </p>
           <ul className="flex flex-col gap-2 text-gray-600">
-            <li className="cursor-pointer hover:text-gray-800">Home</li>
-            <li className="cursor-pointer hover:text-gray-800">About</li>
-            <li className="cursor-pointer hover:text-gray-800">Contact</li>
+            <li>
+              <Link to="/" className="hover:text-gray-800">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/about" className="hover:text-gray-800">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-gray-800">
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
         <div>

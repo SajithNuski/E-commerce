@@ -1,7 +1,7 @@
 import { assets } from "../assets/assets";
 import { useState } from "react";
 import axios from "axios";
-import { backendUrl } from "../App";
+import { backendUrl } from "../config/api";
 import { toast } from "react-toastify";
 
 const Add = ({ token }) => {
@@ -40,11 +40,12 @@ const Add = ({ token }) => {
         backendUrl + "/api/product/add",
         formData,
         {
-          headers: {token} },
+          headers: { token },
+        },
       );
-      
-      if(response.data.success){
-        toast.success(response.data.message)
+
+      if (response.data.success) {
+        toast.success(response.data.message);
         setName("");
         setDescription("");
         setImage1(false);
@@ -52,15 +53,12 @@ const Add = ({ token }) => {
         setImage3(false);
         setImage4(false);
         setPrice("");
-      }else{
-
+      } else {
         toast.error(response.data.message);
       }
-
-
     } catch (err) {
       console.log(err);
-      toast.error(err.message)
+      toast.error(err.message);
     }
   };
 

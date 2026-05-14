@@ -42,8 +42,21 @@ const PlaceOrder = () => {
     }));
   };
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    if (!token) {
+      toast.error("Please log in to place an order");
+      navigate("/login");
+      return;
+    }
+    if (!cartItems || Object.keys(cartItems).length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    setLoading(true);
     try {
       const orderItems = [];
       for (const items in cartItems) {
@@ -60,35 +73,68 @@ const PlaceOrder = () => {
           }
         }
       }
-      // console.log(orderItems);
-      let orderData = {
+
+      const orderData = {
         address: formData,
         item: orderItems,
         amount: getCartAmount() + delivery_fee,
       };
 
       switch (method) {
-        // api call for cod order
         case "cod": {
           const response = await axios.post(
             backendUrl + "/api/order/place",
             orderData,
             { headers: { token: token } },
           );
-          console.log(response.data)
-          if (response.data.success) {
+          if (response.data && response.data.success) {
             setCartItems({});
-            navigate("/order");
+            toast.success("Order placed successfully");
+            navigate("/orders");
           } else {
-            toast.error(response.data.message);
+            toast.error(response.data?.message || "Could not place order");
           }
           break;
         }
-        default:
+        case "Stripe": {
+          try {
+            const resp = await axios.post(
+              backendUrl + "/api/order/stripe",
+              { create: true, amount: orderData.amount },
+              { headers: { token: token } },
+            );
+            if (resp.data && resp.data.clientSecret) {
+              toast.success(
+                "Stripe payment created. Complete payment to finish order.",
+              );
+              // TODO: integrate Stripe.js here to confirm payment using resp.data.clientSecret
+            } else {
+              toast.error(
+                resp.data?.message || "Could not create Stripe payment",
+              );
+            }
+          } catch (err) {
+            console.log(err);
+            toast.error(
+              err.response?.data?.message || err.message || "Stripe error",
+            );
+          }
           break;
+        }
+        case "Razorpay": {
+          toast.info("Razorpay flow not implemented on client yet.");
+          break;
+        }
+        default:
+          toast.error("Unknown payment method");
       }
     } catch (error) {
       console.log(error);
+      toast.error(
+        error.response?.data?.message || error.message || "Order error",
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -241,9 +287,10 @@ const PlaceOrder = () => {
           <div className="w-full text-end mt-8">
             <button
               type="submit"
-              className="bg-purple-600 text-white py-3 px-17 rounded text-sm hover:bg-purple-700"
+              disabled={loading}
+              className={`bg-purple-600 text-white py-3 px-17 rounded text-sm ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-purple-700"}`}
             >
-              Place Order
+              {loading ? "Placing..." : "Place Order"}
             </button>
           </div>
         </div>
