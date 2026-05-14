@@ -9,18 +9,26 @@ const Login = ({ setToken }) => {
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-      const responce = await axios.post(backendUrl + "/api/user/admin", {
-        email,
-        password,
+      const normalizedEmail = email.trim().toLowerCase();
+      const normalizedPassword = password.trim();
+
+      const response = await axios.post(backendUrl + "/api/user/admin", {
+        email: normalizedEmail,
+        password: normalizedPassword,
       });
-      if (responce.data.success) {
-        setToken(responce.data.token);
-        localStorage.setItem("admin_token", responce.data.token);
+      if (response.data.success) {
+        setToken(response.data.token);
+        localStorage.setItem("admin_token", response.data.token);
       } else {
-        toast.error(responce.data.message);
+        toast.error(response.data.message || "Admin login failed");
       }
     } catch (err) {
       console.error("Login error:", err);
+      toast.error(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Invalid email or password",
+      );
     }
   };
 
