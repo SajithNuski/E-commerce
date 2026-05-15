@@ -11,6 +11,8 @@ const ProductItem = ({ id, image, name, price }) => {
         className="hover:scale-110 transition ease-in-out"
         src={image[0]}
         alt={name}
+        loading="lazy"
+        decoding="async"
       />
       <h3 className="pt-3 pb-1 text-sm">{name}</h3>
       <p className="text-sm font-medium">

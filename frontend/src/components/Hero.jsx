@@ -26,6 +26,9 @@ const Hero = () => {
         src={assets.hero_img}
         alt="Hero Image"
         className="w-full sm:w-1/2 object-cover"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
       />
     </div>
   );
