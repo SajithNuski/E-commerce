@@ -21,8 +21,11 @@ const Login = () => {
           password,
         });
         if (response.data.success) {
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
+          toast.success("Your account successfully created. Please login.");
+          setCurrentState("Login");
+          setName("");
+          setEmail("");
+          setPassword("");
         } else {
           toast.error(response.data.message);
         }
@@ -35,6 +38,7 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
+          toast.success("Login successful");
           navigate("/");
         }
       }
